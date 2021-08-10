@@ -1,0 +1,41 @@
+.card{
+    position: relative;
+    border: 1px solid rgba(0,0,0,0);
+    width: 80px;
+    margin-right: -62px;
+    margin-bottom: 30px;
+    z-index: 0;
+}
+
+.card:hover{
+    transition: all 100ms ease-in-out;
+    transform: scale(1.2);
+    /* z-index: 100; */
+    margin-bottom: 0;
+}
+
+.selected{
+    border: 1px solid red;
+}
+
+/* .card2{
+    width: 140px;
+    height: 190px;
+    background: url(Cards/cardClubsA.png);
+    float: left;
+    margin-right: -80px;
+    margin-top: -10px;
+}
+
+.card2:hover{
+    transition: all 10ms ease-in-out;
+    margin-top: 0px;
+    transform: scale(1.1);
+} */
+
+#deck{
+    display: inline-block;
+    margin: 1vw;
+    border: 1px solid grey; 
+    padding-right: 80px
+}
