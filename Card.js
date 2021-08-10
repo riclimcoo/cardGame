@@ -24,4 +24,8 @@ export default class Card {
         for (let i = 0; i<52; i++) arr.push(new Card(i));
         return arr;
     }
+
+    get succVal(){
+        return (this.val() + 1)%13;
+    }
 };

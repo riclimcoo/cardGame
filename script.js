@@ -3,12 +3,7 @@ import Card from './Card.js';
 
 let selected = [];
 
-function allEqual(arr, start=0, end=arr.length){
-    for(let i = start; i<end; i++){
-        if (arr[i] != arr[start]) return false;
-    }
-    return true;
-}
+
 
 let deck = document.getElementById("deck");
 
