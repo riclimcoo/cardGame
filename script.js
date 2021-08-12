@@ -1,26 +1,44 @@
 import Card from './Card.js';
-
+import Trick from './Tricks.js';
 
 let selected = [];
 
-
-
 let deck = document.getElementById("deck");
 
-function insertCard(card){
+function renderCard(card){
     let element = document.createElement("img");
     element.src = card.imagePath;
     element.className = "card";
-    element.id = card.cardId;
-    element.addEventListener("click", ()=>{
-        element.classList.toggle("selected");});
-        selected.push(card.cardId);
+    element.dataset.cardId = card.cardId;
+    element.addEventListener("click", e=>{
+        toggleSelect(e.target);
+        });
     deck.appendChild(element);
 }
 
+function toggleSelect(element){
+    let cardId = element.dataset.cardId;
+    if (selected.includes(cardId))  deselectCard(element);
+    else selectCard(element);
+
+    let cardArr = selected.map(x => new Card(x));
+    console.log(`${new Trick(cardArr)}`);
+}
+
+function selectCard(element){
+    let cardId = element.dataset.cardId;
+    selected.push(cardId);
+    element.classList.add("selected");
+}
+
+function deselectCard(element){
+    let cardId = element.dataset.cardId;
+    selected = selected.filter(x => x!=cardId);
+    element.classList.remove("selected");
+}
 
 let deckArr= Card.generateDeck();
-deckArr.forEach(insertCard);
+deckArr.forEach(renderCard);
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -29,10 +47,7 @@ function shuffleArray(array) {
     }
 }
 
-function isAscending(arr){
-    arr.sort();
-    for (let i = 0; i<arr.length; i++){
-        if (arr[i+1] !== arr[i]+1) return false;
-    }
-    return true;
+function toggleElement(arr, val){
+    arr=[];
+    if (arr.includes(val)) arr.re
 }

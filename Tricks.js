@@ -1,72 +1,123 @@
 export default class Trick{
-    invalidHand = -1;
-    singleCard = 0;
-    pair = 1;
-    trio = 2;
-    quadro = 3;
-    flush = 4;
-    straight = 5;
-    fullHouse = 6;
-    quadroHouse = 7;
-    royalFlush = 8;
-    names = ["Single Card", "Pair", "Trio", "Quadro",
+    static singleCard = 0;
+    static pair = 1;
+    static trio = 2;
+    static quadro = 3;
+    static flush = 4;
+    static straight = 5;
+    static fullHouse = 6;
+    static quadroHouse = 7;
+    static royalFlush = 8;
+    static names = ["Single Card", "Pair", "Trio", "Quadro",
         "Flush", "Straight", "Full House", "Quadro Full House", "Royal Flush"];
 
-    getType(hand){
-        switch(hand.length){
+    constructor(cardArr){
+        this.cardArr = cardArr;
+        this.type = this.#getType();
+        this.score = this.#getScore();
+    }
+
+    beats(challenger){
+        return (this.cardArr.length == challenger.cardArr.length && this.score > challenger.score);
+    }
+
+    toString(){
+        return `${Trick.names[this.type]}: ${this.cardArr}`;
+    }
+
+    #getType(){
+        switch(this.cardArr.length){
             case 1:
                 return Trick.singleCard;
             case 2:
-                if (allEqual(hand)) return Trick.pair;
+                if (this.#isSameVal) return Trick.pair;
+                break;
             case 3:
-                if (allEqual(hand)) return Trick.trio;
+                if (this.#isSameVal) return Trick.trio;
+                break;
             case 4:
-                if (allEqual(hand)) return Trick.quadro;
+                if (this.#isSameVal) return Trick.quadro;
+                break;
             case 5:
-                return this.get5CardType(hand);
+                console.log("length 5");
+                return this.#get5CardType();
             default:
-                return this.invalidHand;            
+                throw ("invalid hand");            
         }
     }
 
-    get5CardType(hand){
-        let isFlush = this.isFlush(hand);
-        let isStraight = this.isStraight(hand);
-        if (isFlush && isStraight) return this.royalFlush;
-        if (isFlush) return this.flush;
-        if (isStraight) return this.straight;
-        if (this.isFullHouse(hand)) return this.fullHouse;
-        if (this.isQuadHouse(hand)) return this.quadroHouse;
-        return this.invalidHand;
+    #get5CardType(){
+        if (this.isFlush 
+            && this.isStraight)    return Trick.royalFlush;
+        if (this.isFlush)          return Trick.flush;
+        if (this.isStraight)       return Trick.straight;
+        if (this.#isFullHouse)     return Trick.fullHouse;
+        if (this.#isQuadHouse)     return Trick.quadroHouse;
+        else                       throw "invalid hand";
     }
 
-    isFullHouse(hand){
-        let vals = hand.map(card => card.values);
-        vals.sort();
-        let hasTrio = (vals[0]==vals[1]==vals[2]) || (vals[2]==vals[3]==vals[4]);
+    get #isFullHouse(){
+        let vals = this.#sortedVals;
+        let hasTrio = (vals[0]==vals[1] && vals[1]==vals[2]) || (vals[2]==vals[3]&&vals[3]==vals[4]);
         let hasTwoPairs = (vals[0]==vals[1]) && (vals[3]==vals[4]);
         return hasTrio && hasTwoPairs;
     }
 
-    isQuadHouse(hand){
-        let vals = hand.map(card => card.values);
-        vals.sort();
-        middle3AreSame = (vals[1]==vals[2]==vals[3]);
+    get #isQuadHouse(){
+        let vals = this.#sortedVals;
+        middle3AreSame = (vals[1]==vals[2] && vals[2]==vals[3]);
         outerCardSame = (vals[0] == vals[2])||(vals[4]==vals[2]);
         return middle3AreSame && outerCardSame;
     }
 
-    isStraight(hand){
-        let vals = hand.map(card => card.values);
-        vals.sort();
+    get #isStraight(){
+        let vals = this.#sortedVals;
         for (let i=0; i<vals.length-1; i++){
             if (vals[i]!==vals[i+1]+1) return false;
         }
         return true;
     }
 
-    isFlush(hand) {
-        allEqual(hand.map(card => card.suit));
+    get #isFlush() {
+        allEqual(this.cardArr.map(card => card.suit));
+    }
+
+    get #sortedVals(){
+        let vals = this.cardArr.map(card => card.val);
+        vals.sort();
+        return vals;
+    }
+
+    #getScore(){
+        let typeScore = this.type*100;
+        switch(this.type){
+            case Trick.singleCard:
+            case Trick.pair:
+            case Trick.trio:
+            case Trick.quadro:
+            case Trick.straight:
+            case Trick.royalFlush:
+            case Trick.flush:
+                return typeScore + this.#weakestCard;
+            case Trick.fullHouse:
+            case Trick.quadroHouse:
+                return typeScore + this.#majorityVal;
+            default:
+                throw "invalid hand";
+        }
+    }
+
+    get #weakestCard(){
+        return this.cardArr.reduce((prev,curr) => (prev.cardId<curr.cardId ? prev:curr));
+    }
+
+    get #majorityVal(){
+        return this.#sortedVals[2];
+    }
+
+    get #isSameVal(){
+        console.log(`sorted vals: ${this.#sortedVals}`);
+        return allEqual(this.#sortedVals);
     }
 }
 
