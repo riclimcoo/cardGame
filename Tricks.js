@@ -47,10 +47,10 @@ export default class Trick{
     }
 
     #get5CardType(){
-        if (this.isFlush 
-            && this.isStraight)    return Trick.royalFlush;
-        if (this.isFlush)          return Trick.flush;
-        if (this.isStraight)       return Trick.straight;
+        if (this.#isFlush 
+            && this.#isStraight)    return Trick.royalFlush;
+        if (this.#isFlush)          return Trick.flush;
+        if (this.#isStraight)       return Trick.straight;
         if (this.#isFullHouse)     return Trick.fullHouse;
         if (this.#isQuadHouse)     return Trick.quadroHouse;
         else                       throw "invalid hand";
@@ -65,21 +65,17 @@ export default class Trick{
 
     get #isQuadHouse(){
         let vals = this.#sortedVals;
-        middle3AreSame = (vals[1]==vals[2] && vals[2]==vals[3]);
-        outerCardSame = (vals[0] == vals[2])||(vals[4]==vals[2]);
+        let middle3AreSame = (vals[1]==vals[2] && vals[2]==vals[3]);
+        let outerCardSame = (vals[0] == vals[2])||(vals[4]==vals[2]);
         return middle3AreSame && outerCardSame;
     }
 
     get #isStraight(){
-        let vals = this.#sortedVals;
-        for (let i=0; i<vals.length-1; i++){
-            if (vals[i]!==vals[i+1]+1) return false;
-        }
-        return true;
+        return isAscending(this.#sortedVals);
     }
 
     get #isFlush() {
-        allEqual(this.cardArr.map(card => card.suit));
+        return allEqual(this.cardArr.map(card => card.suit));
     }
 
     get #sortedVals(){
@@ -98,7 +94,7 @@ export default class Trick{
             case Trick.straight:
             case Trick.royalFlush:
             case Trick.flush:
-                return typeScore + this.#weakestCard;
+                return typeScore + this.#weakestCard.cardId;
             case Trick.fullHouse:
             case Trick.quadroHouse:
                 return typeScore + this.#majorityVal;
@@ -116,7 +112,6 @@ export default class Trick{
     }
 
     get #isSameVal(){
-        console.log(`sorted vals: ${this.#sortedVals}`);
         return allEqual(this.#sortedVals);
     }
 }
@@ -124,6 +119,13 @@ export default class Trick{
 function allEqual(arr, start=0, end=arr.length){
     for(let i = start; i<end; i++){
         if (arr[i] != arr[start]) return false;
+    }
+    return true;
+}
+
+function isAscending(arr){
+    for (let i=0; i<arr.length-1; i++){
+        if (arr[i]+1!==arr[i+1]) return false;
     }
     return true;
 }

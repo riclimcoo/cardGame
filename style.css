@@ -15,6 +15,7 @@
 }
 
 .selected{
+    /* box-shadow: 0  0 20px red; */
     border: 1px solid red;
 }
 

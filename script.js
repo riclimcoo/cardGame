@@ -4,6 +4,7 @@ import Trick from './Tricks.js';
 let selected = [];
 
 let deck = document.getElementById("deck");
+let trickBox = document.querySelector("#trickBox");
 
 function renderCard(card){
     let element = document.createElement("img");
@@ -12,6 +13,7 @@ function renderCard(card){
     element.dataset.cardId = card.cardId;
     element.addEventListener("click", e=>{
         toggleSelect(e.target);
+        trickBox.textContent=getTrickofSelected();
         });
     deck.appendChild(element);
 }
@@ -20,9 +22,6 @@ function toggleSelect(element){
     let cardId = element.dataset.cardId;
     if (selected.includes(cardId))  deselectCard(element);
     else selectCard(element);
-
-    let cardArr = selected.map(x => new Card(x));
-    console.log(`${new Trick(cardArr)}`);
 }
 
 function selectCard(element){
@@ -35,6 +34,16 @@ function deselectCard(element){
     let cardId = element.dataset.cardId;
     selected = selected.filter(x => x!=cardId);
     element.classList.remove("selected");
+}
+
+function getTrickofSelected(){
+    try{
+        let cardArr = selected.map(x => new Card(x));
+        return `${new Trick(cardArr)}`;
+    }
+    catch(err){
+        return "Invalid trick";
+    }
 }
 
 let deckArr= Card.generateDeck();
