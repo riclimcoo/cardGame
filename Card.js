@@ -16,7 +16,7 @@ export default class Card {
     get imagePath(){
         let suit = Card.SUITS[this.suit];
         let val = Card.VALUES[this.val];
-        return "Cards/card"+suit+val+".png";
+        return "./Cards/card"+suit+val+".png";
     }
 
     static generateDeck(){
