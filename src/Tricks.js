@@ -14,7 +14,7 @@ export default class Trick{
     constructor(cardArr){
         this.cardArr = cardArr;
         this.type = this.#getType();
-        this.score = this.#getScore();
+        this.score = this.#calcScore();
     }
 
     beats(challenger){
@@ -39,7 +39,6 @@ export default class Trick{
                 if (this.#isSameVal) return Trick.quadro;
                 break;
             case 5:
-                console.log("length 5");
                 return this.#get5CardType();
             default:
                 throw ("invalid hand");            
@@ -51,9 +50,9 @@ export default class Trick{
             && this.#isStraight)    return Trick.royalFlush;
         if (this.#isFlush)          return Trick.flush;
         if (this.#isStraight)       return Trick.straight;
-        if (this.#isFullHouse)     return Trick.fullHouse;
-        if (this.#isQuadHouse)     return Trick.quadroHouse;
-        else                       throw "invalid hand";
+        if (this.#isFullHouse)      return Trick.fullHouse;
+        if (this.#isQuadHouse)      return Trick.quadroHouse;
+        else                        throw "invalid hand";
     }
 
     get #isFullHouse(){
@@ -79,13 +78,11 @@ export default class Trick{
     }
 
     get #sortedVals(){
-        let vals = this.cardArr.map(card => card.val);
-        vals.sort();
-        return vals;
+        return this.cardArr.map(c=>c.val).sort();
     }
 
-    #getScore(){
-        let typeScore = this.type*100;
+    #calcScore(){
+        let typeScore = this.type*1000;
         switch(this.type){
             case Trick.singleCard:
             case Trick.pair:
@@ -93,11 +90,12 @@ export default class Trick{
             case Trick.quadro:
             case Trick.straight:
             case Trick.royalFlush:
-            case Trick.flush:
                 return typeScore + this.#weakestCard.cardId;
             case Trick.fullHouse:
             case Trick.quadroHouse:
                 return typeScore + this.#majorityVal;
+            case Trick.flush:
+                return typeScore + this.cardArr[0].suit*100 + this.#weakestCard.cardId;
             default:
                 throw "invalid hand";
         }

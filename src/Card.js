@@ -2,15 +2,17 @@ export default class Card {
     constructor(cardId) {
         this.cardId = Number(cardId);
     }
+    static VALUES = [3,4,5,6,7,8,9,10,"J","Q","K","A",2]; 
     static SUITS = ["Clubs", "Spades", "Hearts", "Diamonds"];
-    static VALUES = [3,4,5,6,7,8,9,10,"J","Q","K","A",2];
-
-    get suit(){
-        return Math.floor(this.cardId/13);
-    };
+    static longVALUES = ["Three", "Four", "Five", "Six", "Seven", 
+        "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace", "Two"];
 
     get val(){
-        return this.cardId % 13;
+        return Math.floor(this.cardId/4);
+    };
+
+    get suit(){
+        return this.cardId % 4;
     };
 
     get imagePath(){
@@ -26,7 +28,7 @@ export default class Card {
     }
 
     toString(){
-        return `${Card.VALUES[this.val]} of ${Card.SUITS[this.suit]}`;
+        return `${Card.longVALUES[this.val]} of ${Card.SUITS[this.suit]}`;
     }
 
     get succVal(){
