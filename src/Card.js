@@ -1,37 +1,32 @@
-export default class Card {
-    constructor(cardId) {
-        this.cardId = Number(cardId);
-    }
-    static VALUES = [3,4,5,6,7,8,9,10,"J","Q","K","A",2]; 
-    static SUITS = ["Clubs", "Spades", "Hearts", "Diamonds"];
-    static longVALUES = ["Three", "Four", "Five", "Six", "Seven", 
-        "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace", "Two"];
+const Card = {
+    VALUES: [3,4,5,6,7,8,9,10,"J","Q","K","A",2],
+    SUITS: ["Clubs", "Spades", "Hearts", "Diamonds"],
+    longVALUES: ["Three", "Four", "Five", "Six", "Seven", 
+        "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace", "Two"],
 
-    get val(){
-        return Math.floor(this.cardId/4);
-    };
+    val(id){
+        return Math.floor(id/4);
+    },
 
-    get suit(){
-        return this.cardId % 4;
-    };
+    suit(id){
+        return id % 4;
+    },
 
-    get imagePath(){
-        let suit = Card.SUITS[this.suit];
-        let val = Card.VALUES[this.val];
+    imagePath(id){
+        let suit = Card.SUITS[Card.suit(id)];
+        let val = Card.VALUES[Card.val(id)];
         return "./Cards/card"+suit+val+".png";
-    }
+    },
 
-    static generateDeck(){
+    generateDeck(){
         let arr = [];
-        for (let i = 0; i<52; i++) arr.push(new Card(i));
+        for (let i = 0; i<52; i++) arr.push(i);
         return arr;
-    }
+    },
 
-    toString(){
-        return `${Card.longVALUES[this.val]} of ${Card.SUITS[this.suit]}`;
-    }
-
-    get succVal(){
-        return (this.val() + 1)%13;
+    stringify(id){
+        return `${Card.longVALUES[Card.val(id)]} of ${Card.SUITS[Card.suit(id)]}`;
     }
 };
+
+export {Card as default};

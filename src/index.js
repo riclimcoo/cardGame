@@ -1,8 +1,6 @@
 import Card from './Card.js';
 import Trick from './Tricks.js';
 
-// const textureAtlas = require('textureAtlas.json');
-
 let selected = [];
 
 let deck = document.getElementById("deck");

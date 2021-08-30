@@ -1,3 +1,5 @@
+import Card from './Card';
+
 export default class Trick{
     static singleCard = 0;
     static pair = 1;
@@ -22,8 +24,10 @@ export default class Trick{
     }
 
     toString(){
-        return `${Trick.names[this.type]}: ${this.cardArr}`;
+        return `${Trick.names[this.type]}: ${this.cardArr.map(c=>Card.stringify(c))}`;
     }
+
+    // private methods
 
     #getType(){
         switch(this.cardArr.length){
@@ -74,11 +78,11 @@ export default class Trick{
     }
 
     get #isFlush() {
-        return allEqual(this.cardArr.map(card => card.suit));
+        return allEqual(this.cardArr.map(c=> Card.suit(c)));
     }
 
     get #sortedVals(){
-        return this.cardArr.map(c=>c.val).sort();
+        return this.cardArr.map(c=>Card.val(c)).sort();
     }
 
     #calcScore(){
@@ -90,19 +94,19 @@ export default class Trick{
             case Trick.quadro:
             case Trick.straight:
             case Trick.royalFlush:
-                return typeScore + this.#weakestCard.cardId;
+                return typeScore + this.#weakestCard;
             case Trick.fullHouse:
             case Trick.quadroHouse:
                 return typeScore + this.#majorityVal;
             case Trick.flush:
-                return typeScore + this.cardArr[0].suit*100 + this.#weakestCard.cardId;
+                return typeScore + Card.suit(this.cardArr[0])*100 + this.#weakestCard;
             default:
                 throw "invalid hand";
         }
     }
 
     get #weakestCard(){
-        return this.cardArr.reduce((prev,curr) => (prev.cardId<curr.cardId ? prev:curr));
+        return Math.min(...this.cardArr);
     }
 
     get #majorityVal(){
